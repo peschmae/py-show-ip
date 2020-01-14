@@ -4,7 +4,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def ip():
-    return request.remote_addr, 200
+    if 'x-forwarded-for' in request.headers:
+        return request.headers['x-forwarded-for'].split(',')[-1], 200
+    else:
+        return request.remote_addr, 200
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
